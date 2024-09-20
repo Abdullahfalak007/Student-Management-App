@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import StudentForm from "./components/StudentForm";
+import StudentList from "./components/StudentList";
+import "./index.css";
 
-function App() {
+const App = () => {
+  const [students, setStudents] = useState([]);
+  const [editingStudent, setEditingStudent] = useState(null);
+
+  const addStudent = (student) => {
+    setStudents([...students, { ...student, id: Date.now() }]);
+  };
+
+  const updateStudent = (updatedStudent) => {
+    setStudents(
+      students.map((student) =>
+        student.id === updatedStudent.id ? updatedStudent : student
+      )
+    );
+    setEditingStudent(null);
+  };
+
+  const deleteStudent = (id) => {
+    setStudents(students.filter((student) => student.id !== id));
+  };
+
+  const handleEdit = (student) => {
+    setEditingStudent(student);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <h1>Student Management App</h1>
+      <StudentForm
+        addStudent={addStudent}
+        updateStudent={updateStudent}
+        editingStudent={editingStudent}
+      />
+      <StudentList
+        students={students}
+        deleteStudent={deleteStudent}
+        editStudent={handleEdit}
+      />
     </div>
   );
-}
+};
 
 export default App;
